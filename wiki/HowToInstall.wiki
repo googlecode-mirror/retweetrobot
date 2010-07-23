@@ -1,0 +1,15 @@
+#summary 安装指南
+#labels Featured
+
+==安装指南==
+ # 下载程序，如果需要的话先在本地编辑好
+ # 上传程序文件到服务器
+ # 在服务器的控制面板上设置好Cron Jobs(Linux)或者计划任务(Windows)
+
+===【参考】使用cPanel的空间的Cron Job设置方法===
+ # 登陆进入cPanel，找到Cron Jobs（时钟守护作业）
+ # 在Add New Cron Job下面将Minute设置为`*/5` （表示每5分钟执行一次），其他设置为`*`
+ # 将Command处修改为 `/usr/bin/php -q /home/你的cPanel用户名/public_html/你的程序php文件路径`
+ # 点击Add New Cron Job添加即可
+
+至于修改方法，请参考 HowToEdit 页
