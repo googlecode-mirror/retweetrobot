@@ -1,0 +1,59 @@
+#summary 如何个性化你的锐推机器人
+
+==自定义搜集条件==
+你可以自定义搜集推的条件。
+===修改关键词===
+如果你的目标不是转发RT而是转发其他关键词，请找到源代码中这行代码：
+{{{
+$str1 = get_net_data('http://search.twitter.com/search.atom?lang=zh&q=RT&rpp=99');
+}}}
+其中的RT修改为其他关键词。如果你使用的是中文关键词，请将每一个中文之间都加入一个空格，还要使用urlencode包围。像这样：
+{{{
+$str1 = get_net_data('http://search.twitter.com/search.atom?lang=zh&q='.urlencode("蛋 疼").'&rpp=99');
+}}}
+除此之外你还得继续修改。找到这一行代码：
+{{{
+$str3 = substr($str2,0,20);
+}}}
+在它的下面继续写一行代码以防止一些意外事件。代码像这样：
+{{{
+if (strpos($str3,'蛋疼')==false) continue;
+}}}
+===屏蔽某些关键词===
+有时候因为特殊必要需要屏蔽关键词。找到这一行代码：
+{{{
+$str3 = substr($str2,0,20);
+}}}
+在它的下面继续写几行代码以进行屏蔽操作。每一行代码像这样：
+{{{
+if (strpos($str,'@aiww')!=false) continue;
+}}}
+这样子的话带有“@aiww”的推都会被屏蔽。
+----
+----
+==自定义via==
+正如网络上最流行的锐推机器人@rtmeme发的每一条推的来源都是rtmeme一样，这个机器人的推的via也可以任你修改。目前有两种方法：
+===方法1：使用oAuth===
+如果你有能力，请自己写或者找一个oAuth发推的小程序，然后写一个名字叫做update_tweet.php的文件和机器人的work.php放在一起，其中有一个叫做post的function，仅需要一个参数（推的内容）。这样子work.php会自动尝试链接update_tweet.php并调用其中的post来发推。
+
+这里我提供一个程序：oAuth发推者（<a href="http://www.box.net/shared/bm0lv9s0t8">v0.1.1下载</a>），配置方法如下：
+ # 将文件解压缩，和work.php放一起
+ # 修改fun.php名字为update_tweet.php
+ # 上传所有文件到服务器。
+ # 访问你上传后的文件地址，可以看到Callback URL，记下来！
+ # 翻墙访问 https://twitter.com/apps/new 注册一个程序，其中“Default Access type”选择“Read & Write”，还有就是Callback URL填写前一步获取的那个。其他自己操作。点击Save。
+ # 把弹出页面的“Consumer key”和“Consumer secret”分别对应写入config.php源代码对应处，这点你自己应该很容易知道在哪里吧。上传修改后的config.php。
+ # 最后翻墙访问你上传后的文件地址，点击页面上的那个按钮，随后按照指示操作即可！
+===方法2：使用BasicAuth发推（不推荐）===
+默认work.php会自动使用BasicAuth的API发推。打开work.php你会发现有一行代码如下：
+{{{
+function do_post_api($message, $via = "web") {
+}}}
+其中web就是BasicAuth所传递的数据。你可以试试修改为其他值。例如：
+ * twitterfeed
+ * bigbird
+ * birdfeed
+ * tweetie
+还有许多随便你了。
+
+*警告：此方法将在8月中旬失效*
