@@ -13,7 +13,7 @@ $str1 = get_net_data('http://search.twitter.com/search.atom?lang=zh&q='.urlencod
 }}}
 除此之外你还得继续修改。找到这一行代码：
 {{{
-$str3 = substr($str2,0,20);
+if (!preg_match("/[一-龥]/u",$text)) continue;
 }}}
 在它的下面继续写一行代码以防止一些意外事件。代码像这样：
 {{{
@@ -22,7 +22,7 @@ if (strpos($str3,'蛋疼')==false) continue;
 ===屏蔽某些关键词===
 有时候因为特殊必要需要屏蔽关键词。找到这一行代码：
 {{{
-$str3 = substr($str2,0,20);
+if (!preg_match("/[一-龥]/u",$text)) continue;
 }}}
 在它的下面继续写几行代码以进行屏蔽操作。每一行代码像这样：
 {{{
